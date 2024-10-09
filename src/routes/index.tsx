@@ -1,5 +1,23 @@
 import { component$ } from "@builder.io/qwik";
-import type { DocumentHead } from "@builder.io/qwik-city";
+import type { RequestEvent, RequestHandler } from "@builder.io/qwik-city";
+
+export const onRequest: RequestHandler = async ({ redirect }: RequestEvent) => {
+  try {
+    // Simulate a server error
+    throw new Error("Simulated 500 Internal Server Error");
+  } catch (e) {
+    // Log the error (you might want to use a proper logging system in a real app)
+    console.error(e);
+
+    // Redirect to a custom error page
+    throw redirect(302, "/500");
+  }
+};
+
+export const onError = ({ redirect }: RequestEvent) => {
+  // Redirect to a custom error page
+  throw redirect(302, "/500");
+};
 
 export default component$(() => {
   return (
@@ -14,12 +32,4 @@ export default component$(() => {
   );
 });
 
-export const head: DocumentHead = {
-  title: "Welcome to Qwik",
-  meta: [
-    {
-      name: "description",
-      content: "Qwik site description",
-    },
-  ],
-};
+// ... existing code for head ...
